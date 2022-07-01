@@ -108,7 +108,7 @@ func (c *Client) CreateTask(params map[string]string, filePath string) (map[stri
 	if err := json.NewDecoder(resp.Body).Decode(&ret); err != nil {
 		return ret, err
 	}
-	fmt.Println(ret)
+	//fmt.Println(ret)
 	return ret, nil
 }
 
@@ -155,7 +155,7 @@ func (c *Client) Poll(task map[string]interface{}) (map[string]interface{}, erro
 		if !(c.ResultStatus(ret) == "Doing" || c.ResultStatus(ret) == "Init") {
 			return ret, nil
 		}
-		fmt.Println(ret)
+		//fmt.Println(ret)
 
 	}
 	return ret, nil
