@@ -4,9 +4,9 @@ import "idp_sdk"
 import "fmt"
 
 func main(){
-	c:=idp_sdk.NewClient("QWhPM7Wxqr3xc4dCQFmXhH8xYD8CTq3N41XnvV38OblJQpTw5R9DyKHA0coN5m81","test")
-	params:=map[string]string{"fileType":"CBKS"}
-	task,err:=c.CreateTask(params,"E:\\work\\idp-sdk\\idp_sdk_go\\[UOB]202103_UOB_2222.pdf")
+	c:=idp_sdk.NewClient("your-token","your-region")
+	params:=map[string]string{"fileType":"type-of-the-file"}
+	task,err:=c.CreateTask(params,"path-to-the-file")
 	if err!=nil{
 		fmt.Println(err)
 	}
