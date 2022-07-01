@@ -1,4 +1,4 @@
-# 6Estates idp-python
+# 6Estates idp-golang
 ## A golang SDK for communicating with the 6Estates Intelligent Document Processing(IDP) Platform.
 
 ## Documentation
