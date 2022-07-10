@@ -8,10 +8,12 @@ The documentation for the 6Estates IDP API can be found via https://idp-sea.6est
 
 ## Setup
     to be filled
+    
 ## Usage
 1. To Extract Fields in Synchronous Way
 If you just need to do one file at a time
 
+```go
     package main
 
     import "github.com/6estates/idp-golang/idp_sdk"
@@ -26,10 +28,11 @@ If you just need to do one file at a time
       }
       fmt.Println(result)
     }
+ ```
 
 2. To Extract Fields in Asynchronous Way
 If you need to do a batch of files
-
+```go
     package main
 
     import "github.com/6estates/idp-golang/idp_sdk"
@@ -44,3 +47,4 @@ If you need to do a batch of files
       }
       fmt.Println(c.Poll(task))
     }
+ ```
