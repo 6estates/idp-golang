@@ -1,10 +1,10 @@
 # 6Estates idp-golang
-## A golang SDK for communicating with the 6Estates Intelligent Document Processing(IDP) Platform.
+
+A Golang SDK for communicating with the 6Estates Intelligent Document Processing(IDP) Platform.
 
 ## Documentation
 The documentation for the 6Estates IDP API can be found via https://idp-sea.6estates.com/docs
 
-The golang library documentation can be found via https://idp-sdk-doc.6estates.com/python/.
 
 ## Setup
     to be filled
