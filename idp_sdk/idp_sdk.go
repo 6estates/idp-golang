@@ -1,4 +1,4 @@
-package main
+package idp_sdk
 
 import (
 	"bytes"
@@ -226,7 +226,7 @@ func (c *Client) Poll(task map[string]interface{}) (map[string]interface{}, erro
 }
 
 func (c *Client) RunSimpleTask(params map[string]string, filePath string) (map[string]interface{}, error) {
-	task, err := c.CreateTask(params, "E:\\work\\idp-sdk\\idp_sdk_go\\[UOB]202103_UOB_2222.pdf")
+	task, err := c.CreateTask(params, filePath)
 	if err != nil {
 		fmt.Println(err)
 		return nil, err
