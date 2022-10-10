@@ -33,6 +33,7 @@ The documentation for the 6Estates IDP API can be found via https://idp-sea.6est
       ret, err :=idp_sdk.OauthUtil("your-authorization"，"your-region")
       if err != nil {
 		fmt.Println(err)
+		return 
 	  }
       oauth:=ret["data"].(map[string]interface{})["value"].(string)
       isOauth:=true
