@@ -248,7 +248,7 @@ func (c *Client) RunSimpleTask(params map[string]string, filePath string) (map[s
 }
 
 
-func  OauthUtil(region, authorization string) (map[string]interface{}, error) {
+func  OauthUtil(authorization, region string) (map[string]interface{}, error) {
         if authorization  == "" {
 		Error("Authorization  is required!")
 	}
