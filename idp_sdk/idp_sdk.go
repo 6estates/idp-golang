@@ -278,7 +278,7 @@ func  OauthUtil(authorization, region string) (map[string]interface{}, error) {
 		return  ret, err
 	}
 	
-	isExpired, _ := ret["data"].(map[string]interface{})["expired"].(bool)
+	isExpired := ret["data"].(map[string]interface{})["expired"].(bool)
 
 	if isExpired {
 	    return ret, fmt.Errorf("This IDP Authorization is expired, please re-send the request to get new IDP Authorization.")
