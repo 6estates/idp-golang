@@ -31,6 +31,7 @@ func Error(msg string) error {
 
 type Client struct {
 	token, region, url_post, url_get string
+	isOauth bool
 }
 
 type FileType struct {
@@ -93,7 +94,7 @@ func (c *Client) FieldType(field map[string]interface{}) string {
 	return fmt.Sprintf("%v", field["type"])
 }
 
-func NewClient(token, region string) (c *Client) {
+func NewClient(token, region string, isOauth ...bool) (c *Client) {
 	if token == "" {
 		Error("Token is required!")
 	}
@@ -106,6 +107,11 @@ func NewClient(token, region string) (c *Client) {
 	c = &Client{}
 	c.token = token
 	c.region = region
+	c.isOauth = false
+	if len(isOauth) > 0 {
+    		c.isOauth = isOauth[0]
+        }
+	
 	if region == "test" {
 		region = ""
 	} else {
@@ -152,17 +158,19 @@ func (c *Client) CreateTask(params map[string]string, filePath string) (map[stri
 	if err != nil {
 		return ret, err
 	}
-	// fmt.Println(body)
+	
 	req, err := http.NewRequest("POST", c.url_post, body)
 	if err != nil {
 		return ret, err
 	}
-	// fmt.Println(req)
-	//req.Header.Set("Content-Type","multipart/form-data")
-	// req.Header.Add("Content-Type", writer.FormDataContentType())
-	req.Header.Set("X-ACCESS-TOKEN", c.token)
+
+	if c.isOauth{
+		req.Header.Set("Authorization", c.token)
+	}else {
+		req.Header.Set("X-ACCESS-TOKEN", c.token)
+	}
+	
 	req.Header.Set("Content-Type", content_type)
-	// fmt.Println(req)
 	resp, err := HttpClient.Do(req)
 	if err != nil {
 		return ret, err
@@ -184,7 +192,11 @@ func (c *Client) TaskResult(task map[string]interface{}) (map[string]interface{}
 	taskID := fmt.Sprintf("%v", c.TaskID(task))
 	ret := make(map[string]interface{})
 	req, _ := http.NewRequest("GET", c.url_get+taskID, nil)
-	req.Header.Set("X-ACCESS-TOKEN", c.token)
+	if c.isOauth{
+		req.Header.Set("Authorization", c.token)
+	}else {
+		req.Header.Set("X-ACCESS-TOKEN", c.token)
+	}
 	resp, err := HttpClient.Do(req)
 	if err != nil {
 		return ret, err
@@ -197,6 +209,7 @@ func (c *Client) TaskResult(task map[string]interface{}) (map[string]interface{}
 	return ret, nil
 
 }
+
 
 func (c *Client) ResultStatus(ret map[string]interface{}) string {
 	data := ret["data"].(map[string]interface{})
@@ -232,4 +245,43 @@ func (c *Client) RunSimpleTask(params map[string]string, filePath string) (map[s
 		return nil, err
 	}
 	return c.Poll(task)
+}
+
+
+func  OauthUtil(region, authorization string) (map[string]interface{}, error) {
+        if authorization  == "" {
+		Error("Authorization  is required!")
+	}
+	reg := make(map[string]bool)
+	reg["sea"] = true
+	reg["test"] = true
+	if reg[region] != true {
+		Error("Region is limited in ['test','sea']!")
+	}
+
+	if region == "test" {
+		region = "-onp"
+	} else {
+		region = "-" + region
+	}
+	
+	url_post := "https://oauth" + region + ".6estates.com/oauth/token?grant_type=client_bind"
+        ret := make(map[string]interface{})
+	req, _ := http.NewRequest("POST", url_post, nil) 
+	req.Header.Set("Authorization", authorization)
+	resp, err := HttpClient.Do(req)
+	if err != nil {
+		return  ret, err
+	}
+	defer resp.Body.Close()
+	if err := json.NewDecoder(resp.Body).Decode(&ret); err != nil {
+		return  ret, err
+	}
+	
+	isExpired, _ := ret["data"].(map[string]interface{})["expired"].(bool)
+
+	if isExpired {
+	    return ret, fmt.Errorf("This IDP Authorization is expired, please re-send the request to get new IDP Authorization.")
+	}
+	return ret, nil
 }
